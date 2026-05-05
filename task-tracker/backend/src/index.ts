@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { connectDB } from './config/db';
 import authRoutes from './routes/auth';
+import taskRoutes from './routes/tasks';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/tasks', taskRoutes);
 
 // Health check
 app.get('/', (req: Request, res: Response) => {
@@ -23,8 +25,25 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
+
+  // Mongoose validation error
+  if (err.name === 'ValidationError') {
+    const messages = Object.values(err.errors).map((val: any) => val.message);
+    return res.status(400).json({ message: 'Validation Error', errors: messages });
+  }
+
+  // Mongoose bad ObjectId
+  if (err.name === 'CastError') {
+    return res.status(400).json({ message: 'Invalid ID' });
+  }
+
+  // Mongoose duplicate key
+  if (err.code === 11000) {
+    return res.status(400).json({ message: 'Already exists' });
+  }
+
   res.status(500).json({ message: 'Something went wrong on the server' });
 });
 
