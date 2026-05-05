@@ -36,18 +36,22 @@ export const createTask = async (req: AuthRequest, res: Response, next: NextFunc
 export const updateTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const { title, description, completed } = req.body;
 
-  try {
-    const task = await Task.findOne({ _id: req.params.id, user: req.user?.id });
+  const updateFields: any = {};
+  if (title !== undefined) updateFields.title = title;
+  if (description !== undefined) updateFields.description = description;
+  if (completed !== undefined) updateFields.completed = completed;
 
-    if (!task) {
+  try {
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: req.params.id, user: req.user?.id },
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTask) {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    if (title !== undefined) task.title = title;
-    if (description !== undefined) task.description = description;
-    if (completed !== undefined) task.completed = completed;
-
-    const updatedTask = await task.save();
     res.json(updatedTask);
   } catch (error) {
     next(error);
