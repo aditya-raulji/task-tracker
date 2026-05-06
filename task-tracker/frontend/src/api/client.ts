@@ -2,7 +2,8 @@ import axios from 'axios';
 import { getToken, removeToken } from '../storage/tokenStorage';
 import * as SecureStore from 'expo-secure-store';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://tasktracker-backend-lrqi.onrender.com';
+// Hardcoded - process.env EAS build mein kaam nahi karta
+const BASE_URL = 'https://tasktracker-backend-lrqi.onrender.com';
 
 export const client = axios.create({
   baseURL: BASE_URL,
@@ -32,7 +33,8 @@ client.interceptors.response.use(
     let message = error.response?.data?.message || error.message || 'An error occurred';
 
     if (errors && Array.isArray(errors)) {
-      message = errors.map((err: { msg?: string } | string) => typeof err === 'string' ? err : err.msg).join(', ');
+      message = errors.map((err: { msg?: string } | string) => 
+        typeof err === 'string' ? err : err.msg).join(', ');
     }
 
     return Promise.reject(new Error(message));
