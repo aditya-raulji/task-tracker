@@ -36,6 +36,12 @@
         "projectId": "fb6878fa-5abe-423b-a14d-bcc07413ef90"
       }
     },
-    "owner": "adityarauljis-organization"
+    "owner": "adityarauljis-organization",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fb6878fa-5abe-423b-a14d-bcc07413ef90"
+    }
   }
 }
