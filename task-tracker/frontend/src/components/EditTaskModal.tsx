@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { Modal, View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
 import { useUpdateTask } from '../hooks/useTasks';
 import { Task } from '../types';
+import { theme } from '../theme';
+import { GlassCard } from './ui/GlassCard';
 
 interface Props {
   task: Task | null;
@@ -58,9 +60,12 @@ export const EditTaskModal = ({ task, visible, onClose }: Props) => {
     <Modal visible={visible} animationType="slide" transparent>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={styles.overlay}
+        style={styles.backdrop}
       >
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.touchableBackdrop} activeOpacity={1} onPress={handleClose} />
+        
+        <GlassCard style={styles.container} padding={theme.spacing.xl}>
+          <View style={styles.handle} />
           <Text style={styles.headerTitle}>Edit Task</Text>
           
           {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
@@ -77,8 +82,8 @@ export const EditTaskModal = ({ task, visible, onClose }: Props) => {
             value={description}
             onChangeText={setDescription}
             multiline={true}
-            numberOfLines={4}
-            style={{ height: 80, textAlignVertical: 'top' }}
+            numberOfLines={3}
+            style={styles.textArea}
           />
 
           <View style={styles.actions}>
@@ -86,54 +91,70 @@ export const EditTaskModal = ({ task, visible, onClose }: Props) => {
               title="Cancel" 
               variant="secondary" 
               onPress={handleClose} 
-              style={styles.cancelBtn} 
+              style={styles.flex1} 
             />
+            <View style={{ width: 12 }} />
             <Button 
-              title="Save Changes" 
+              title="Save" 
               onPress={handleSubmit} 
               loading={updateTask.isPending} 
-              style={styles.saveBtn} 
+              style={styles.flex1} 
             />
           </View>
-        </View>
+        </GlassCard>
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
+  backdrop: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  touchableBackdrop: {
+    flex: 1,
   },
   container: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    backgroundColor: theme.colors.bg.glassStrong,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    paddingBottom: Platform.OS === 'ios' ? 40 : theme.spacing.xl,
+    borderWidth: 0,
+    borderTopWidth: 1,
+  },
+  handle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#D1D5DB',
+    alignSelf: 'center',
+    marginBottom: theme.spacing.lg,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 16,
+    fontFamily: theme.fonts.heading,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.lg,
   },
   errorText: {
-    color: '#EF4444',
-    marginBottom: 12,
+    color: theme.colors.text.error,
+    fontFamily: theme.fonts.body,
+    fontSize: theme.fontSize.sm,
+    marginBottom: theme.spacing.md,
+  },
+  textArea: {
+    height: 80,
+    textAlignVertical: 'top',
   },
   actions: {
     flexDirection: 'row',
-    marginTop: 16,
+    marginTop: theme.spacing.md,
   },
-  cancelBtn: {
+  flex1: {
     flex: 1,
-    marginRight: 8,
-  },
-  saveBtn: {
-    flex: 1,
-    marginLeft: 8,
   },
 });

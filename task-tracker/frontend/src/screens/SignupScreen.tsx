@@ -5,8 +5,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
+import { GlassCard } from '../components/ui/GlassCard';
 import { authApi } from '../api/auth';
 import { useAuth } from '../hooks/useAuth';
+import { theme } from '../theme';
 
 export const SignupScreen = () => {
   const [name, setName] = useState('');
@@ -54,12 +56,15 @@ export const SignupScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Create Account</Text>
+        <View style={styles.topSection}>
+          <View style={styles.iconPlaceholder}>
+            <Text style={styles.iconText}>T</Text>
+          </View>
+          <Text style={styles.title}>Join us.</Text>
           <Text style={styles.subtitle}>Sign up to get started</Text>
         </View>
 
-        <View style={styles.form}>
+        <GlassCard style={styles.formSection}>
           {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
           
           <Input
@@ -94,12 +99,12 @@ export const SignupScreen = () => {
             loading={signupMutation.isPending} 
             style={styles.submitBtn}
           />
-        </View>
+        </GlassCard>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.link}>Login</Text>
+            <Text style={styles.link}>Sign in</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -110,35 +115,52 @@ export const SignupScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 24,
+    padding: theme.spacing.xl,
     justifyContent: 'center',
   },
-  header: {
+  topSection: {
     marginBottom: 32,
+    alignItems: 'flex-start',
+  },
+  iconPlaceholder: {
+    width: 56,
+    height: 56,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  iconText: {
+    color: theme.colors.text.white,
+    fontSize: theme.fontSize.xxl,
+    fontFamily: theme.fonts.heading,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
+    fontSize: theme.fontSize.xxl,
+    fontFamily: theme.fonts.heading,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: 13,
+    fontFamily: theme.fonts.body,
+    color: theme.colors.text.muted,
   },
-  form: {
+  formSection: {
     marginBottom: 24,
   },
   submitBtn: {
-    marginTop: 8,
+    marginTop: theme.spacing.xs,
   },
   errorText: {
-    color: '#EF4444',
-    marginBottom: 16,
+    color: theme.colors.text.error,
+    fontSize: 12,
+    fontFamily: theme.fonts.body,
+    marginBottom: theme.spacing.md,
     textAlign: 'center',
   },
   footer: {
@@ -146,10 +168,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   footerText: {
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
+    fontSize: 13,
+    fontFamily: theme.fonts.body,
   },
   link: {
-    color: '#6366F1',
-    fontWeight: '600',
+    color: theme.colors.accent,
+    fontSize: 13,
+    fontFamily: theme.fonts.bodyMedium,
   },
 });

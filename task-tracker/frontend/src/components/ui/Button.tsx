@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, TouchableOpacityProps } from 'react-native';
+import { theme } from '../../theme';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -13,6 +14,7 @@ export const Button = ({
   title, 
   loading = false, 
   variant = 'primary', 
+  fullWidth = true,
   style, 
   disabled,
   ...props 
@@ -34,10 +36,17 @@ export const Button = ({
     }
   };
 
+  const getSpinnerColor = () => {
+    if (variant === 'secondary') return theme.colors.primary;
+    return theme.colors.text.white;
+  };
+
   return (
     <TouchableOpacity
+      activeOpacity={0.85}
       style={[
         styles.button,
+        fullWidth && styles.fullWidth,
         getVariantStyle(),
         disabled || loading ? styles.disabled : null,
         style,
@@ -46,7 +55,7 @@ export const Button = ({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'secondary' ? '#6366F1' : '#FFFFFF'} />
+        <ActivityIndicator color={getSpinnerColor()} />
       ) : (
         <Text style={[styles.text, getVariantTextStyle()]}>{title}</Text>
       )}
@@ -56,36 +65,41 @@ export const Button = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: 24,
-    borderRadius: 8,
+    borderRadius: theme.radius.full,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
   },
+  fullWidth: {
+    width: '100%',
+  },
   primary: {
-    backgroundColor: '#6366F1',
+    backgroundColor: theme.colors.primary,
   },
   secondary: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: theme.colors.primary,
   },
   danger: {
-    backgroundColor: '#EF4444',
+    backgroundColor: theme.colors.error,
   },
   disabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
   text: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: theme.fontSize.base,
+    fontFamily: theme.fonts.bodyMedium,
   },
   textPrimary: {
-    color: '#FFFFFF',
+    color: theme.colors.text.white,
   },
   textSecondary: {
-    color: '#6366F1',
+    color: theme.colors.primary,
   },
   textDanger: {
-    color: '#FFFFFF',
+    color: theme.colors.text.white,
   },
 });

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Task } from '../types';
+import { theme } from '../theme';
+import { GlassCard } from './ui/GlassCard';
 
 interface TaskCardProps {
   task: Task;
@@ -12,18 +14,21 @@ interface TaskCardProps {
 export const TaskCard = ({ task, onToggle, onDelete, onEdit }: TaskCardProps) => {
   const formattedDate = new Date(task.createdAt).toLocaleDateString('en-US', {
     month: 'short',
-    day: 'numeric',
-    year: 'numeric'
+    day: 'numeric'
   });
 
   return (
-    <View style={[styles.card, task.completed && styles.cardCompleted]}>
+    <GlassCard 
+      style={[styles.card, task.completed && styles.cardCompleted]} 
+      padding={theme.spacing.lg}
+    >
       <View style={styles.content}>
         <TouchableOpacity 
           style={[styles.checkbox, task.completed && styles.checkboxChecked]}
           onPress={() => onToggle(task._id, !task.completed)}
+          activeOpacity={0.8}
         >
-          {task.completed && <View style={styles.checkmark} />}
+          {task.completed && <Text style={styles.checkmark}>✓</Text>}
         </TouchableOpacity>
         
         <View style={styles.textContainer}>
@@ -35,107 +40,110 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit }: TaskCardProps) =>
               {task.description}
             </Text>
           ) : null}
-          <Text style={styles.date}>{formattedDate}</Text>
+          
+          <View style={styles.bottomRow}>
+            <Text style={styles.date}>{formattedDate}</Text>
+            
+            <View style={styles.actions}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => onEdit(task)}>
+                <Text style={styles.actionIcon}>✏</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.actionBtn, styles.actionBtnDelete]} onPress={() => onDelete(task._id)}>
+                <Text style={[styles.actionIcon, styles.deleteIcon]}>✕</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
-
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionBtn} onPress={() => onEdit(task)}>
-          <Text style={styles.editText}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionBtn} onPress={() => onDelete(task._id)}>
-          <Text style={styles.deleteText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </GlassCard>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    marginBottom: theme.spacing.md,
   },
   cardCompleted: {
-    opacity: 0.7,
+    opacity: 0.65,
+    backgroundColor: 'rgba(255,255,255,0.4)',
   },
   content: {
     flexDirection: 'row',
-    flex: 1,
     alignItems: 'flex-start',
   },
   checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 1.5,
     borderColor: '#D1D5DB',
-    marginRight: 12,
+    backgroundColor: theme.colors.bg.white,
+    marginRight: theme.spacing.md,
     marginTop: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
+    backgroundColor: theme.colors.success,
+    borderColor: theme.colors.success,
   },
   checkmark: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#FFFFFF',
+    color: theme.colors.text.white,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   textContainer: {
     flex: 1,
-    marginRight: 8,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 4,
+    fontSize: theme.fontSize.base,
+    fontFamily: theme.fonts.bodyMedium,
+    color: theme.colors.text.primary,
+    marginBottom: 2,
   },
   titleCompleted: {
     textDecorationLine: 'line-through',
-    color: '#6B7280',
+    color: theme.colors.text.muted,
   },
   description: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 6,
+    fontSize: theme.fontSize.sm,
+    fontFamily: theme.fonts.body,
+    color: theme.colors.text.muted,
+    marginTop: 3,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing.md,
   },
   date: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontSize: 11,
+    fontFamily: theme.fonts.body,
+    color: '#D1D5DB',
   },
   actions: {
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    height: 50,
+    flexDirection: 'row',
+    gap: 8,
   },
   actionBtn: {
-    paddingLeft: 8,
-    paddingVertical: 2,
+    width: 26,
+    height: 26,
+    borderRadius: 8,
+    backgroundColor: theme.colors.bg.white,
+    borderWidth: 1,
+    borderColor: theme.colors.border.default,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  editText: {
-    color: '#6366F1',
-    fontSize: 14,
-    fontWeight: '500',
+  actionBtnDelete: {
+    borderColor: 'rgba(239, 68, 68, 0.2)',
   },
-  deleteText: {
-    color: '#EF4444',
-    fontSize: 14,
-    fontWeight: '500',
+  actionIcon: {
+    fontSize: 12,
+    color: theme.colors.text.secondary,
+  },
+  deleteIcon: {
+    color: theme.colors.error,
   },
 });
