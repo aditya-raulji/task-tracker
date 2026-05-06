@@ -29,12 +29,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        const start = Date.now();
         const storedToken = await getToken();
         const storedUser = await SecureStore.getItemAsync(USER_KEY);
         
         if (storedToken && storedUser) {
           setToken(storedToken);
           setUser(JSON.parse(storedUser));
+        }
+        
+        const elapsed = Date.now() - start;
+        if (elapsed < 500) {
+          await new Promise(resolve => setTimeout(resolve, 500 - elapsed));
         }
       } catch (error) {
         console.error('Failed to load auth state', error);

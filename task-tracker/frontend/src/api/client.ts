@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { getToken } from '../storage/tokenStorage';
+import { getToken, removeToken } from '../storage/tokenStorage';
+import * as SecureStore from 'expo-secure-store';
+
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:5000';
 
 export const client = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:5000',
+  baseURL: BASE_URL,
   timeout: 10000,
 });
 
@@ -19,8 +22,19 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const message = error.response?.data?.message || error.message || 'An error occurred';
+  async (error) => {
+    if (error.response?.status === 401) {
+      await removeToken();
+      await SecureStore.deleteItemAsync('auth_user');
+    }
+    
+    const errors = error.response?.data?.errors;
+    let message = error.response?.data?.message || error.message || 'An error occurred';
+
+    if (errors && Array.isArray(errors)) {
+      message = errors.map((err: any) => err.msg || err).join(', ');
+    }
+
     return Promise.reject(new Error(message));
   }
 );
