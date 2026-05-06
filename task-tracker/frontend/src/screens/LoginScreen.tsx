@@ -63,7 +63,8 @@ export const LoginScreen = () => {
             placeholder="Enter your password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={true}
+            autoCorrect={false}
           />
 
           <Button 

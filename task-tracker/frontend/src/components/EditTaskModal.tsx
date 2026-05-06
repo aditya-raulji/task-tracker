@@ -69,14 +69,14 @@ export const EditTaskModal = ({ task, visible, onClose }: Props) => {
             label="Title *"
             value={title}
             onChangeText={setTitle}
-            autoFocus
+            autoFocus={true}
           />
 
           <Input
             label="Description (Optional)"
             value={description}
             onChangeText={setDescription}
-            multiline
+            multiline={true}
             numberOfLines={4}
             style={{ height: 80, textAlignVertical: 'top' }}
           />

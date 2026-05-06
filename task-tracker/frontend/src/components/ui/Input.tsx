@@ -4,6 +4,10 @@ import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native'
 interface InputProps extends TextInputProps {
   label: string;
   error?: string;
+  secureTextEntry?: boolean;
+  multiline?: boolean;
+  editable?: boolean;
+  autoCorrect?: boolean;
 }
 
 export const Input = ({ label, error, style, ...props }: InputProps) => {

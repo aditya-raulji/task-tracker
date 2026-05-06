@@ -53,7 +53,7 @@ export const CreateTaskModal = ({ visible, onClose }: Props) => {
             placeholder="What needs to be done?"
             value={title}
             onChangeText={setTitle}
-            autoFocus
+            autoFocus={true}
           />
 
           <Input
@@ -61,7 +61,7 @@ export const CreateTaskModal = ({ visible, onClose }: Props) => {
             placeholder="Add details..."
             value={description}
             onChangeText={setDescription}
-            multiline
+            multiline={true}
             numberOfLines={4}
             style={{ height: 80, textAlignVertical: 'top' }}
           />

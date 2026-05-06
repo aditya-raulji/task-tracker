@@ -4,6 +4,8 @@ import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, TouchableOpacity
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
   loading?: boolean;
+  disabled?: boolean;
+  fullWidth?: boolean;
   variant?: 'primary' | 'secondary' | 'danger';
 }
 
