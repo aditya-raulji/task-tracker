@@ -12,20 +12,12 @@
 
 ## 🔗 Live Links & Demo
 
-- **🎥 YouTube Demo:** [Watch Here](#) *(Placeholder)*
-- **📱 Frontend App Live:** [Expo Go Link](#) *(Placeholder)*
-- **🌐 Backend API Base URL:** [API Link](#) *(Placeholder)*
+- **🎥 YouTube Demo:** [Watch Here](https://youtu.be/-JULBI92yqU) 
+- **📱 Frontend App Live:** [Expo Go Link](https://expo.dev/accounts/adityarauljis-organization/projects/frontend/builds/f02eb1a6-0bdb-4a06-9500-80b09501d5b9)
+- **🌐 Backend API Base URL:** [API Link](https://tasktracker-backend-lrqi.onrender.com/) 
 
 ---
 
-## 📸 Screenshots
-
-| Login / Signup | Task List (Pending) | Create Task Modal | Empty State |
-|:---:|:---:|:---:|:---:|
-| ![Login](#) | ![Tasks](#) | ![Modal](#) | ![Empty](#) |
-| *Glassmorphism Auth* | *Pull-to-refresh & Filters* | *Slide-up Glass Modal* | *Zero Tasks View* |
-
----
 
 ## ✅ Assignment Requirements Checklist
 
