@@ -6,21 +6,23 @@ import { generateToken } from '../utils/generateToken';
 export const signup = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ message: 'Validation Error', errors: errors.array() });
   }
 
   const { name, email, password } = req.body;
+  const trimmedName = name.trim();
+  const trimmedEmail = email.trim();
 
   try {
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email: trimmedEmail });
 
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
     const user = await User.create({
-      name,
-      email,
+      name: trimmedName,
+      email: trimmedEmail,
       password,
     });
 
@@ -45,13 +47,14 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ message: 'Validation Error', errors: errors.array() });
   }
 
   const { email, password } = req.body;
+  const trimmedEmail = email.trim();
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: trimmedEmail });
 
     if (user && (await user.comparePassword(password))) {
       res.json({

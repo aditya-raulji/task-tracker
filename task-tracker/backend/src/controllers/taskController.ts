@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { Task } from '../models/Task';
 import { AuthRequest } from '../middleware/auth';
+import mongoose from 'mongoose';
 
 export const getTasks = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
@@ -15,7 +16,7 @@ export const getTasks = async (req: AuthRequest, res: Response, next: NextFuncti
 export const createTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ message: 'Validation Error', errors: errors.array() });
   }
 
   const { title, description } = req.body;
@@ -35,6 +36,10 @@ export const createTask = async (req: AuthRequest, res: Response, next: NextFunc
 
 export const updateTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const { title, description, completed } = req.body;
+
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid Task ID format' });
+  }
 
   const updateFields: any = {};
   if (title !== undefined) updateFields.title = title;
@@ -59,6 +64,10 @@ export const updateTask = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 export const deleteTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid Task ID format' });
+  }
+
   try {
     const task = await Task.findOne({ _id: req.params.id, user: req.user?.id });
 
