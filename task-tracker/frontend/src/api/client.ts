@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken, removeToken } from '../storage/tokenStorage';
 import * as SecureStore from 'expo-secure-store';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:5000';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://tasktracker-backend-lrqi.onrender.com';
 
 export const client = axios.create({
   baseURL: BASE_URL,
@@ -27,7 +27,7 @@ client.interceptors.response.use(
       await removeToken();
       await SecureStore.deleteItemAsync('auth_user');
     }
-    
+
     const errors = error.response?.data?.errors;
     let message = error.response?.data?.message || error.message || 'An error occurred';
 
