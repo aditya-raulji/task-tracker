@@ -5,13 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { LoginScreen } from '../screens/LoginScreen';
 import { SignupScreen } from '../screens/SignupScreen';
 
-// Placeholder for Tasks screen
-import { Text } from 'react-native';
-const TasksScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Tasks Screen (To be implemented)</Text>
-  </View>
-);
+import { TasksScreen } from '../screens/TasksScreen';
 
 const Stack = createNativeStackNavigator();
 
