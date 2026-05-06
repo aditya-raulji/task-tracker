@@ -2,12 +2,13 @@ import axios from 'axios';
 import { getToken, removeToken } from '../storage/tokenStorage';
 import * as SecureStore from 'expo-secure-store';
 
-// Hardcoded - process.env EAS build mein kaam nahi karta
-const BASE_URL = 'https://tasktracker-backend-lrqi.onrender.com';
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? 'https://tasktracker-backend-lrqi.onrender.com';
 
 export const client = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  // Render free tier has cold starts up to 60s — keep timeout generous
+  timeout: 60000,
 });
 
 client.interceptors.request.use(
@@ -29,12 +30,28 @@ client.interceptors.response.use(
       await SecureStore.deleteItemAsync('auth_user');
     }
 
+    // No response at all → pure network / timeout issue
+    if (!error.response) {
+      const isTimeout = error.code === 'ECONNABORTED';
+      return Promise.reject(
+        new Error(
+          isTimeout
+            ? 'Server is waking up, please try again in a moment ☕'
+            : 'Network error — check your internet connection'
+        )
+      );
+    }
+
     const errors = error.response?.data?.errors;
-    let message = error.response?.data?.message || error.message || 'An error occurred';
+    let message =
+      error.response?.data?.message || error.message || 'An error occurred';
 
     if (errors && Array.isArray(errors)) {
-      message = errors.map((err: { msg?: string } | string) => 
-        typeof err === 'string' ? err : err.msg).join(', ');
+      message = errors
+        .map((err: { msg?: string } | string) =>
+          typeof err === 'string' ? err : err.msg
+        )
+        .join(', ');
     }
 
     return Promise.reject(new Error(message));

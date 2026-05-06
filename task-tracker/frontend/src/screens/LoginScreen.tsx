@@ -37,6 +37,8 @@ export const LoginScreen = () => {
     loginMutation.mutate({ email, password });
   };
 
+  const isPending = loginMutation.isPending;
+
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
@@ -61,6 +63,7 @@ export const LoginScreen = () => {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!isPending}
           />
           
           <Input
@@ -70,14 +73,20 @@ export const LoginScreen = () => {
             onChangeText={setPassword}
             secureTextEntry={true}
             autoCorrect={false}
+            editable={!isPending}
           />
 
           <Button 
-            title="Sign In" 
+            title={isPending ? 'Signing in...' : 'Sign In'}
             onPress={handleLogin} 
-            loading={loginMutation.isPending} 
+            loading={isPending} 
             style={styles.submitBtn}
           />
+          {isPending && (
+            <Text style={styles.connectingText}>
+              ☕ Server is waking up, this may take up to 30s on first use
+            </Text>
+          )}
         </GlassCard>
 
         <View style={styles.footer}>
@@ -155,5 +164,13 @@ const styles = StyleSheet.create({
     color: theme.colors.accent,
     fontSize: 13,
     fontFamily: theme.fonts.bodyMedium,
+  },
+  connectingText: {
+    color: theme.colors.text.muted,
+    fontSize: 11,
+    fontFamily: theme.fonts.body,
+    textAlign: 'center',
+    marginTop: theme.spacing.sm,
+    opacity: 0.8,
   },
 });
