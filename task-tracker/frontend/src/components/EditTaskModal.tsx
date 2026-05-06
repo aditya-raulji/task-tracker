@@ -47,7 +47,7 @@ export const EditTaskModal = ({ task, visible, onClose }: Props) => {
       },
       {
         onSuccess: handleClose,
-        onError: (err: any) => setErrorMsg(err.message || 'Failed to update task'),
+        onError: (err: Error) => setErrorMsg(err.message || 'Failed to update task'),
       }
     );
   };

@@ -15,7 +15,7 @@ export const SignupScreen = () => {
   const [errorMsg, setErrorMsg] = useState('');
   
   const { login } = useAuth();
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const navigation = useNavigation<NativeStackNavigationProp<Record<string, object | undefined>>>();
 
   const signupMutation = useMutation({
     mutationFn: authApi.signup,

@@ -32,7 +32,7 @@ client.interceptors.response.use(
     let message = error.response?.data?.message || error.message || 'An error occurred';
 
     if (errors && Array.isArray(errors)) {
-      message = errors.map((err: any) => err.msg || err).join(', ');
+      message = errors.map((err: { msg?: string } | string) => typeof err === 'string' ? err : err.msg).join(', ');
     }
 
     return Promise.reject(new Error(message));

@@ -25,12 +25,18 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Global error handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+interface CustomError extends Error {
+  name: string;
+  code?: number;
+  errors?: Record<string, { message: string }>;
+}
+
+app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map((val: any) => val.message);
+    const messages = Object.values(err.errors || {}).map((val) => val.message);
     return res.status(400).json({ message: 'Validation Error', errors: messages });
   }
 
@@ -53,7 +59,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.info(`Server running on port ${PORT}`);
   });
 };
 

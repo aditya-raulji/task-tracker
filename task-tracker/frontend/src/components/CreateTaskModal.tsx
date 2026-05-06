@@ -32,7 +32,7 @@ export const CreateTaskModal = ({ visible, onClose }: Props) => {
       { title: title.trim(), description: description.trim() || undefined },
       {
         onSuccess: handleClose,
-        onError: (err: any) => setErrorMsg(err.message || 'Failed to create task'),
+        onError: (err: Error) => setErrorMsg(err.message || 'Failed to create task'),
       }
     );
   };

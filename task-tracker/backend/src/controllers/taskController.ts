@@ -41,7 +41,7 @@ export const updateTask = async (req: AuthRequest, res: Response, next: NextFunc
     return res.status(400).json({ message: 'Invalid Task ID format' });
   }
 
-  const updateFields: any = {};
+  const updateFields: Record<string, unknown> = {};
   if (title !== undefined) updateFields.title = title;
   if (description !== undefined) updateFields.description = description;
   if (completed !== undefined) updateFields.completed = completed;
